@@ -7,6 +7,7 @@ const headers = table.querySelector('thead');
 const tbody = table.querySelector('tbody');
 let isSorted = true;
 let preventActive;
+let lastSortedId;
 
 document.addEventListener('DOMContentLoaded', () => {
   headers.addEventListener('click', (e) => {
@@ -18,6 +19,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (!col) {
       return;
+    }
+
+    if (lastSortedId !== col) {
+      isSorted = true;
     }
 
     const rows = [...tbody.rows];
@@ -46,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     isSorted = !isSorted;
+    lastSortedId = col;
 
     tbody.append(...sortedRows);
   });
@@ -56,6 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const row = e.target.closest('tr');
+
+    if (!row) {
+      return;
+    }
 
     if (preventActive) {
       preventActive.classList.remove('active');
@@ -78,6 +88,8 @@ document.addEventListener('DOMContentLoaded', () => {
     input.classList.add('cell-input');
 
     const initValue = cell.textContent;
+
+    input.value = initValue;
 
     cell.textContent = '';
     cell.appendChild(input);
@@ -228,6 +240,26 @@ document.addEventListener('DOMContentLoaded', () => {
         type: 'error',
         title: 'Error',
         text: 'Position is required',
+      });
+
+      return;
+    }
+
+    if (inputSalary.value === '' || isNaN(Number(inputSalary.value))) {
+      showNotification({
+        type: 'error',
+        title: 'Salary',
+        text: 'Enter Salary',
+      });
+
+      return;
+    }
+
+    if (!select.value) {
+      showNotification({
+        type: 'error',
+        title: 'Office',
+        text: 'Please select an office',
       });
 
       return;
