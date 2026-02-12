@@ -21,13 +21,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (lastSortedId !== col) {
-      isSorted = true;
-    }
-
     const rows = [...tbody.rows];
 
     const id = col.cellIndex;
+
+    if (lastSortedId !== id) {
+      isSorted = true;
+    }
 
     const sortedRows = rows.sort((a, b) => {
       const astr = a.cells[id].textContent.replace(/[^\d.-]/g, '');
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     isSorted = !isSorted;
-    lastSortedId = col;
+    lastSortedId = id;
 
     tbody.append(...sortedRows);
   });
@@ -80,6 +80,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const cell = e.target.closest('td');
 
     if (!cell) {
+      return;
+    }
+
+    if (document.querySelector('.cell-input')) {
       return;
     }
 
@@ -275,7 +279,11 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    if (inputAge.value < 18 || inputAge.value > 90) {
+    if (
+      isNaN(Number(inputSalary.value.trim())) ||
+      inputAge.value < 18 ||
+      inputAge.value > 90
+    ) {
       showNotification({
         type: 'error',
         title: 'Invalid age',
@@ -308,6 +316,8 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'Success',
       text: 'Employee successfully added',
     });
+
+    form.reset();
   });
 
   // #endregion
